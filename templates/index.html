@@ -1,151 +1,101 @@
-// 가상환경 source venv/bin/activate 
-
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Gym IoT Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <style>
-        body {
-            background: black;
-            height: 6000px;
-            font-family: 'nanumsquare';
-        }
-        .title {
-            margin-top: 400px;   /* 간격 크게 */
-            color: white;
-            text-align: center;
-            opacity: 0;
-            transition: all 0.5s;
-        }
-            div {
-                
-                color: white;
-                text-align: center;
-                opacity: 0;
-                transition: all 0.5s;
-            }
-        .treadmill_mainview{
-            background-color: gray;
-            display:flex;
-            flex-direction:row;   /* 가로 방향 */
-            flex-wrap:nowrap;     /* 줄바꿈 금지 */
-            border-radius: 15px;
-            gap:20px;
-            padding:20px;
-            width:680px;          /* 충분히 크게 */
-            height:220px;
-            margin:auto;
-        }
-        
-        .box{
-            position: relative;
-            width:150px;
-            height:180px;
-            border:3px solid white;
-            background:transparent;
-            flex-shrink:0;
-            border-radius: 15px;
-        }
-        .trail{
-            position: absolute;
-            top: 0;                 /* 부모의 맨 위 */
-            left: 0;                /* 부모의 맨 왼쪽 */
-            width: 100%;            /* 부모 너비에 맞춤 */
-            height: 100%;           /* 부모 높이에 맞춤 */
-            z-index: 1;
-        }
-        .human{
-            position: absolute;
-            top: 0;                 /* 부모의 맨 위 */
-            left: 0;                /* 부모의 맨 왼쪽 */
-            width: 100%;            /* 부모 너비에 맞춤 */
-            height: 100%;           /* 부모 높이에 맞춤 */
-            z-index: 2;
-            
-        }
-        .box img {
-        position: absolute;   /* 이미지들을 한 곳으로 모음 */
-        top: 0;
-        left: 0;
-        width: 100%;          /* 부모 박스 크기에 맞춤 */
-        height: auto;         /* 비율 유지 */
-        }
-    </style>
-    
-    
+  <div class="app">
 
+    <!-- ── Header ── -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">Smart Gym</span>
+        </div>
+        <span class="subtitle">IoT 실시간 모니터링</span>
+      </div>
+      <div class="header-right">
+        <div class="connection-badge loading" id="connBadge">
+          <span class="conn-dot"></span>
+          <span class="conn-label" id="connLabel">연결 중...</span>
+        </div>
+        <span class="clock" id="clock"></span>
+      </div>
+    </header>
 
-    <div class="title"><h1>Smart Gym IoT Service</h1></div>
-    <div class="title"><h1> [런닝머신1][런닝머신2][런닝머신3][런닝머신4]</h1></div>
-    <div class="treadmill_mainview">
-        <div class="box"id="box-1">
-            <div class="human"><img id="tm1"
-                
-                ></div>
-            <div class="trail"><img id="person1"src="../static/img/trail.png" alt="Trail"></div>   
-        </div>
-        <div class="box"id="box-2">
-            <div class="human"><img id="tm2" src="" alt="Human"></div>
-            <div class="trail"><img id="person2"src="../static/img/trail.png" alt="Trail"></div>   
-        </div><div class="box"id="box-3">
-            <div class="human"><img id="tm3" src="" alt="Human"></div>
-            <div class="trail"><img id="person3"src="../static/img/trail.png" alt="Trail"></div>   
-        </div><div class="box"id="box-4">
-            <div class="human"><img id="tm4" src="" alt="Human"></div>
-            <div class="trail"><img id="person4"src="../static/img/trail.png" alt="Trail"></div>   
-        </div>
+    <!-- ── Stats Bar ── -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <span class="stat-value">4</span>
+        <span class="stat-label">전체 트레드밀</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value orange" id="statInUse">–</span>
+        <span class="stat-label">사용 중</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value green" id="statAvailable">–</span>
+        <span class="stat-label">사용 가능</span>
+      </div>
     </div>
-    <div class="title"><h1> 현재 사용기구상태 </h1></div>
-    <div class="title"><h1> 수건 잔량 </h1></div>
-    <div class="title"><img src="good.jpeg" alt="Good"></div>
 
-    <script>
-        let observer = new IntersectionObserver ((e)=>{
-            //감시중인 박스가 나타나면 실행되는 함수
-            e.forEach((박스)=>{
-                if(박스.isIntersecting){
-                    박스.target.style.opacity = 1;
-                    //박스.target.style.transform = 'translateY(-20px)';
-                    } else {
-                        박스.target.style.opacity = 0; // 다시 화면에서 사라지면 숨기기 (선택)
-                    }
-                })
-            
-        })
+    <!-- ── Treadmill Section ── -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title-icon">🏃</span>
+          트레드밀
+        </h2>
+        <span class="section-badge" id="tmBadge">로딩 중...</span>
+      </div>
+      <div class="treadmill-grid" id="tmGrid">
+        <!-- 동적 생성 (app.js) -->
+      </div>
+    </section>
 
-        document.querySelectorAll("div").forEach(el=>{
-        observer.observe(el)
-        })
-        document.querySelectorAll("title").forEach(el=>{
-        observer.observe(el)
-        })
-    </script>
-    <script>
-        async function loadData(){
-            const res = await fetch('/TMdata')
-            const data = await res.json()
-            console.log(data)
-            document.getElementById("tm1").src  = data.Tmn1
-            document.getElementById("tm2").src  = data.Tmn2
-            document.getElementById("tm3").src = data.Tmn3
-            document.getElementById("tm4").src = data.Tmn4
+    <!-- ── Towel + Equipment Row ── -->
+    <div class="lower-row">
 
-        }
-        setInterval(loadData, 1000)
-        window.onload = loadData
-    </script>
-    
-   
+      <!-- Towel Section -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-title-icon">🧺</span>
+            타올 비치대
+          </h2>
+        </div>
+        <div class="towel-list" id="towelList">
+          <!-- 동적 생성 (app.js) -->
+        </div>
+      </section>
 
+      <!-- Equipment Section -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-title-icon">🏋️</span>
+            헬스 기구
+          </h2>
+        </div>
+        <div class="equip-grid" id="equipGrid">
+          <!-- 동적 생성 (app.js) -->
+        </div>
+      </section>
 
+    </div>
 
+    <!-- ── Footer ── -->
+    <footer class="footer">
+      Smart Gym IoT Service &nbsp;·&nbsp; 1초 간격 실시간 업데이트
+    </footer>
 
+  </div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/app.js"></script>
 </body>
 </html>

@@ -1,60 +1,62 @@
-# python app.py
-# 가상환경 source venv/bin/activate 
+# 실행: uvicorn main:app --host 0.0.0.0 --port 8000
+# 가상환경: source venv/bin/activate
 
-
-
+import threading
+import state
 import treadmill
 import towel_remaining
 import fitness_equipment
-import state
-from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse
-import time
-import threading
-import uvicorn
 
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-    
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-
-    # 이파일실행될떄만 실행되도록 
-@app.get('/')
+@app.get("/")
 async def index():
-    return FileResponse('templates/index.html')
+    return FileResponse("templates/index.html")
+
+
 @app.get("/TMdata")
 async def tm_data():
     return {
         "Tmn1": state.TREADMILL[1],
         "Tmn2": state.TREADMILL[2],
         "Tmn3": state.TREADMILL[3],
-        "Tmn4": state.TREADMILL[4]
+        "Tmn4": state.TREADMILL[4],
     }
 
+
+@app.get("/toweldata")
+async def towel_data():
+    return state.TOWEL
+
+
+@app.get("/equipmentdata")
+async def equipment_data():
+    return state.EQUIPMENT
+
+
 def main():
-        
-    #sensor.init_gpio()
-    #sensor.start_threads()
+    try:
+        import sensor
+        sensor.init_gpio()
+        sensor.start_threads()
+    except ImportError:
+        pass
 
-    # 각 기능 3개가 동시에 작동하도록 스레드생성
-    threadtreadmill = threading.Thread(target=treadmill.trail_detect_run)
-    # threadtowel = threading.Thread(target=towel_remaining.run)
-    # threadfitness = threading.Thread(target=fitness_equipment.run)
+    thread_treadmill = threading.Thread(target=treadmill.trail_detect_run, daemon=True)
+    # thread_towel   = threading.Thread(target=towel_remaining.run, daemon=True)
+    # thread_fitness = threading.Thread(target=fitness_equipment.run, daemon=True)
 
-    threadtreadmill.daemon = True
-    # threadtowel.daemon = True
-    # threadfitness.daemon = True
-
-    threadtreadmill.start()
-    # threadtowel.start()
-    # threadfitness.start()
+    thread_treadmill.start()
+    # thread_towel.start()
+    # thread_fitness.start()
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 if __name__ == "__main__":
     main()
-
-
-    

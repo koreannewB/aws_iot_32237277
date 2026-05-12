@@ -3,7 +3,7 @@ venv/
 .venv/
 env/
 
-# 파이썬 캐시 무시
+# 파이썬 캐시 무시ㅂ
 __pycache__/
 *.py[cod]
 
