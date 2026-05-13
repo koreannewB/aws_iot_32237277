@@ -11,6 +11,11 @@ __pycache__/
 datasets/
 runs/
 *.pt
-
+ex1.mp4
+best.pt
+last.pt
+venv/
+__pycache__/
+runs/
 # OS 설정 파일
 .DS_Store
