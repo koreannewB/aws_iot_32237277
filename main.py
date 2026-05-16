@@ -56,11 +56,11 @@ def main():
         pass
 
     thread_treadmill = threading.Thread(target=treadmill.trail_detect_run, daemon=True)
-    # thread_towel   = threading.Thread(target=towel_remaining.run, daemon=True)
-    # thread_fitness = threading.Thread(target=fitness_equipment.run, daemon=True)
+    thread_towel   = threading.Thread(target=towel_remaining.run, daemon=True)
+    #thread_fitness = threading.Thread(target=fitness_equipment.run, daemon=True)
 
     thread_treadmill.start()
-    # thread_towel.start()
+    thread_towel.start()
     # thread_fitness.start()
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
