@@ -11,10 +11,10 @@ TOWEL = {
 }
 
 EQUIPMENT = [
-    {"id": 1, "name": "벤치프레스",  "icon": "🏋️", "status": "available"},
-    {"id": 2, "name": "덤벨 랙",     "icon": "💪",  "status": "available"},
-    {"id": 3, "name": "스쿼트 랙",   "icon": "🏗️",  "status": "available"},
-    {"id": 4, "name": "레그프레스",  "icon": "🦵",  "status": "available"},
-    {"id": 5, "name": "케이블 머신", "icon": "⚙️",  "status": "available"},
-    {"id": 6, "name": "풀업 바",     "icon": "🤸",  "status": "available"},
+    {"id": 1, "name": "벤치프레스",  "icon": "🏋️", "status": "available", "in_use": 0},
+    {"id": 2, "name": "덤벨 랙",     "icon": "💪",  "status": "available", "in_use": 0},
+    {"id": 3, "name": "스쿼트 랙",   "icon": "🏗️",  "status": "available", "in_use": 0},
+    {"id": 4, "name": "레그프레스",  "icon": "🦵",  "status": "available", "in_use": 0},
+    {"id": 5, "name": "케이블 머신", "icon": "⚙️",  "status": "available", "in_use": 0},
+    {"id": 6, "name": "풀업 바",     "icon": "🤸",  "status": "available", "in_use": 0},
 ]

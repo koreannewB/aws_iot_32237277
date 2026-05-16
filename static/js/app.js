@@ -141,8 +141,8 @@ class GymDashboard {
       const status = document.getElementById(`equip-status-${eq.id}`);
       if (!card || !status) return;
 
-      const isInUse = eq.status === 'in-use';
-      card.className   = `equip-card ${isInUse ? 'in-use' : ''}`;
+      const isInUse = eq.status === 'in_use';
+      card.className   = `equip-card ${isInUse ? 'in_use' : ''}`;
       status.className = `equip-status ${eq.status}`;
       status.textContent = isInUse ? '사용 중' : '사용 가능';
     });

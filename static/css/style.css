@@ -387,7 +387,7 @@ body {
   transition: border-color 0.3s;
 }
 
-.equip-card.in-use {
+.equip-card.in_use {
   border-color: rgba(249, 115, 22, 0.3);
 }
 
@@ -419,7 +419,7 @@ body {
 }
 
 .equip-status.available { color: var(--accent-green); }
-.equip-status.in-use    { color: var(--accent-orange); }
+.equip-status.in_use    { color: var(--accent-orange); }
 
 /* ── Footer ── */
 .footer {
