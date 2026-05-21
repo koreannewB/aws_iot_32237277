@@ -6,7 +6,7 @@ import state
 import treadmill
 import towel_remaining
 import fitness_equipment
-import uvicorn 
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -38,14 +38,18 @@ async def towel_data():
 @app.get("/equipmentdata")
 async def equipment_data():
     return state.EQUIPMENT
+
+
 @app.get("/monitor")
 async def monitor():
-    return FileResponse('templates/monitor.html')
+    return FileResponse("templates/monitor.html")
+
 
 @app.get("/video")
 async def video():
     print(f"current_frame: {treadmill.current_frame is None}")  # 확인용
     return {"frame": treadmill.current_frame}
+
 
 def main():
     try:
@@ -56,14 +60,15 @@ def main():
         pass
 
     thread_treadmill = threading.Thread(target=treadmill.trail_detect_run, daemon=True)
-    # thread_towel   = threading.Thread(target=towel_remaining.run, daemon=True)
-    thread_fitness   = threading.Thread(target=fitness_equipment.run, daemon=True)
+    thread_towel = threading.Thread(target=towel_remaining.run, daemon=True)
+    thread_fitness = threading.Thread(target=fitness_equipment.run, daemon=True)
 
     thread_treadmill.start()
-    # thread_towel.start()
+    thread_towel.start()
     thread_fitness.start()
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
 if __name__ == "__main__":
     main()
