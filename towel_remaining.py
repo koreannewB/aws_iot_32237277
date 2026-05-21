@@ -1,81 +1,64 @@
+import RPi.GPIO as GPIO
 import time
-import state
 
-SENSORS = {
-    1: {"trig": 23, "echo": 24},
-    2: {"trig": 25, "echo": 8},
+# 사진에 명시된 핀 번호 (BCM 모드 기준 GPIO 번호 사용)
+ULTRASONIC_SENSORS = {
+    "sensor_1": {"trig": 23, "echo": 24},
+    "sensor_2": {"trig": 25, "echo": 8},
+    "sensor_3": {"trig": 9,  "echo": 11},
 }
 
-MIN_DIST_CM = 5.0
-MAX_DIST_CM = 30.0
-SPEED_OF_SOUND = 34300
-MEASURE_INTERVAL = 1.0
+def setup_ultrasonic():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    for name, pins in ULTRASONIC_SENSORS.items():
+        GPIO.setup(pins["trig"], GPIO.OUT)
+        GPIO.setup(pins["echo"], GPIO.IN)
+        GPIO.output(pins["trig"], False)
+    print("초음파 센서 초기화 완료. 안정화 대기 중...")
+    time.sleep(2)
 
-
-def _measure_distance_cm(gpio, trig, echo):
-    gpio.output(trig, True)
+def measure_distance(trig, echo):
+    # 트리거 핀으로 10us 펄스 전송
+    GPIO.output(trig, True)
     time.sleep(0.00001)
-    gpio.output(trig, False)
+    GPIO.output(trig, False)
 
+    start_time = time.time()
+    stop_time = time.time()
+
+    # Echo 핀이 High가 될 때까지 대기 (시작 시간)
     timeout = time.time() + 0.05
-    start = time.time()
-    while gpio.input(echo) == 0:
-        start = time.time()
+    while GPIO.input(echo) == 0:
+        start_time = time.time()
         if time.time() > timeout:
             return None
 
+    # Echo 핀이 Low가 될 때까지 대기 (도착 시간)
     timeout = time.time() + 0.05
-    end = time.time()
-    while gpio.input(echo) == 1:
-        end = time.time()
+    while GPIO.input(echo) == 1:
+        stop_time = time.time()
         if time.time() > timeout:
             return None
 
-    return (end - start) * SPEED_OF_SOUND / 2
+    # 시간 차이를 통해 거리 계산 (음속 34300 cm/s)
+    time_elapsed = stop_time - start_time
+    distance = (time_elapsed * 34300) / 2
+    return distance
 
-
-def _dist_to_count(distance_cm, max_count):
-    clamped = max(MIN_DIST_CM, min(MAX_DIST_CM, distance_cm))
-    ratio = (MAX_DIST_CM - clamped) / (MAX_DIST_CM - MIN_DIST_CM)
-    return round(ratio * max_count)
-
-
-def run():
+if __name__ == '__main__':
     try:
-        import RPi.GPIO as GPIO
-        GPIO.setmode(GPIO.BCM)
-        for pins in SENSORS.values():
-            GPIO.setup(pins["trig"], GPIO.OUT)
-            GPIO.setup(pins["echo"], GPIO.IN)
-            GPIO.output(pins["trig"], False)
-        time.sleep(0.5)
-
-        print("[towel] 초음파 센서 초기화 완료")
-
+        setup_ultrasonic()
         while True:
-            for rack_id, pins in SENSORS.items():
-                dist = _measure_distance_cm(GPIO, pins["trig"], pins["echo"])
-                if dist is None:
-                    print(f"[towel] {rack_id}번 비치대 측정 타임아웃")
-                    continue
-                max_count = state.TOWEL[rack_id]["max"]
-                count = _dist_to_count(dist, max_count)
-                state.TOWEL[rack_id]["count"] = count
-                print(f"[towel] {rack_id}번 비치대: {dist:.1f}cm → {count}/{max_count}장")
-            time.sleep(MEASURE_INTERVAL)
-
-    except ImportError:
-        print("[towel] RPi.GPIO 없음 - 더미 모드 실행 (PC 테스트용)")
-        _run_dummy()
-
-
-def _run_dummy():
-    import math
-    t = 0.0
-    while True:
-        for rack_id in state.TOWEL:
-            max_c = state.TOWEL[rack_id]["max"]
-            ratio = (math.sin(t + rack_id * 1.5) + 1) / 2
-            state.TOWEL[rack_id]["count"] = round(ratio * max_c)
-        t += 0.05
-        time.sleep(MEASURE_INTERVAL)
+            for name, pins in ULTRASONIC_SENSORS.items():
+                dist = measure_distance(pins["trig"], pins["echo"])
+                if dist is not None:
+                    print(f"[{name}] 거리: {dist:.2f} cm")
+                else:
+                    print(f"[{name}] 측정 실패 (타임아웃)")
+            print("-" * 30)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("측정 종료")
+    finally:
+        GPIO.cleanup()
