@@ -14,17 +14,18 @@
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', sans-serif;
+            gap: 16px;
         }
         .container {
             background: #fff;
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.10);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            width: 720px;
+            gap: 12px;
+            width: 660px;
         }
         .title-row {
             width: 100%;
@@ -32,43 +33,55 @@
             justify-content: space-between;
             align-items: center;
         }
-        .title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #222;
-        }
-        .badges {
-            display: flex;
-            gap: 8px;
-        }
+        .title { font-size: 16px; font-weight: 700; color: #222; }
+        .badges { display: flex; gap: 8px; }
         .badge {
-            font-size: 12px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            background: #f0f2f5;
-            color: #555;
+            font-size: 12px; padding: 3px 10px;
+            border-radius: 20px; background: #f0f2f5; color: #555;
         }
         #fpsBadge { color: #00b96b; }
+
+        /* 영상 + zone 오버레이 래퍼 */
         .video-wrap {
-            width: 672px;
-            height: 378px;
+            position: relative;
+            width: 620px;
+            height: 349px;
             background: #111;
             border-radius: 10px;
             overflow: hidden;
             border: 2px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         #yolo-view {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: fill;
+            display: block;
         }
-        .footer {
-            font-size: 12px;
-            color: #aaa;
+
+        /* zone 구분선 + 번호 오버레이 */
+        .zone-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
         }
+        .zone-line {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: rgba(0, 255, 100, 0.7);
+        }
+        .zone-label {
+            position: absolute;
+            top: 10px;
+            color: #0f0;
+            font-size: 22px;
+            font-weight: 900;
+            text-shadow: 0 0 6px #000, 0 0 12px #000;
+            transform: translateX(-50%);
+        }
+
+        .footer { font-size: 12px; color: #aaa; }
     </style>
 </head>
 <body>
@@ -80,9 +93,23 @@
                 <span class="badge" id="timeBadge">--:--:--</span>
             </div>
         </div>
+
         <div class="video-wrap">
             <img id="yolo-view" alt="YOLO stream">
+            <!-- zone 오버레이: 4등분 -->
+            <div class="zone-overlay">
+                <!-- 구분선 3개 -->
+                <div class="zone-line" style="left:25%"></div>
+                <div class="zone-line" style="left:50%"></div>
+                <div class="zone-line" style="left:75%"></div>
+                <!-- 존 번호 (각 구역 중앙) -->
+                <div class="zone-label" style="left:12.5%">1</div>
+                <div class="zone-label" style="left:37.5%">2</div>
+                <div class="zone-label" style="left:62.5%">3</div>
+                <div class="zone-label" style="left:87.5%">4</div>
+            </div>
         </div>
+
         <div class="footer">Smart Gym IoT · Real-time camera feed</div>
     </div>
 
@@ -90,9 +117,7 @@
         const img       = document.getElementById('yolo-view');
         const fpsBadge  = document.getElementById('fpsBadge');
         const timeBadge = document.getElementById('timeBadge');
-
-        let lastTime   = performance.now();
-        let frameCount = 0;
+        let lastTime = performance.now(), frameCount = 0;
 
         setInterval(() => {
             timeBadge.textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
@@ -112,12 +137,9 @@
                         lastTime = now;
                     }
                 }
-            } catch(e) {
-                console.warn('fetch error', e);
-            }
+            } catch(e) { console.warn('fetch error', e); }
             setTimeout(fetchFrame, 100);
         }
-
         fetchFrame();
     </script>
 </body>
