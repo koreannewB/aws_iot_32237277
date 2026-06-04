@@ -5,34 +5,47 @@ import state
 from ultralytics import YOLO
 import cv2
 import base64
+
 current_frame = None
 model = YOLO('iotsmart_gym.pt')
 
-ZONES = {
-    1: (0,    0,    480,  1080),  # (x1, y1, x2, y2)
-    2: (480,  0,    960,  1080),
-    3: (960,  0,    1440, 1080),
-    4: (1440, 0,    1920, 1080),
-}
+def make_zones(w, h):
+    """프레임 크기에 맞춰 자동 4등분"""
+    step = w // 4
+    return {
+        1: (0,        0, step,     h),
+        2: (step,     0, step * 2, h),
+        3: (step * 2, 0, step * 3, h),
+        4: (step * 3, 0, w,        h),
+    }
 
 def is_person_in_zone(box, zone):
-    x1, y1, x2, y2 = box          # YOLO: x1,y1,x2,y2
-    zx1, zy1, zx2, zy2 = zone     # ZONES도 같은 순서여야 함
+    x1, y1, x2, y2 = box
+    zx1, zy1, zx2, zy2 = zone
     cx = (x1 + x2) / 2
     cy = (y1 + y2) / 2
     return zx1 < cx < zx2 and zy1 < cy < zy2
+
 def trail_detect_run():
     global current_frame
-    print("런닝머신감지기능작동")
-    # cap = cv2.VideoCapture("ex1.mp4")
-    USE_CAMERA = True 
+    print("[Treadmill] Detection started")
+
+    USE_CAMERA = True
     if USE_CAMERA:
         from picamera2 import Picamera2
         picam2 = Picamera2()
+        config = picam2.create_preview_configuration(
+            main={"size": (1920, 1080), "format": "RGB888"}
+        )
+        picam2.configure(config)
         picam2.start()
     else:
         cap = cv2.VideoCapture("iottest2.mp4")
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
     prev_detected = {1: False, 2: False, 3: False, 4: False}
+    ZONES = None  # 첫 프레임에서 자동 설정
 
     while True:
         if USE_CAMERA:
@@ -41,26 +54,32 @@ def trail_detect_run():
         else:
             ret, frame = cap.read()
             if not ret:
-                cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-                cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+                cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 continue
+
+        h, w = frame.shape[:2]
+
+        # 첫 프레임에서 ZONES 자동 설정
+        if ZONES is None:
+            ZONES = make_zones(w, h)
+            print(f"[Treadmill] Frame size: {w}x{h}")
+            print(f"[Treadmill] ZONES: {ZONES}")
+
         results = model(frame, verbose=False)
         annotated = results[0].plot()
 
-        # 구역 경계선 (x축으로 4등분, 높이 1080)
-        for x in [480, 960, 1440]:
-            cv2.line(annotated, (x, 0), (x, 1080), (0, 255, 0), 3)
+        # 구역 경계선 + 번호 그리기
+        step = w // 4
+        for i, x in enumerate([step, step * 2, step * 3]):
+            cv2.line(annotated, (x, 0), (x, h), (0, 255, 0), 3)
+        for zone_id in range(1, 5):
+            cx = (zone_id - 1) * step + step // 2
+            cv2.putText(annotated, str(zone_id), (cx - 20, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 4)
 
-        annotated = cv2.resize(annotated, (640, 360))  # ✅ (width, height) 순서
+        annotated = cv2.resize(annotated, (640, 360))
         _, buffer = cv2.imencode('.jpg', annotated)
         current_frame = base64.b64encode(buffer).decode('utf-8')
-        # print(f"프레임 저장됨: {len(current_frame)}")
-        # YOLO 감지
-       
-
-        
-        
- 
 
         # 구역별 감지
         detected = {1: False, 2: False, 3: False, 4: False}
@@ -71,24 +90,12 @@ def trail_detect_run():
                     for zone_id, zone in ZONES.items():
                         if is_person_in_zone((x1, y1, x2, y2), zone):
                             detected[zone_id] = True
-                            print(f"{zone_id}번 런닝머신 사람 감지!")
+                            print(f"[Treadmill] Zone {zone_id} occupied")
 
         # state 업데이트
         for i in range(1, 5):
-            if detected[i] != prev_detected[i]:  # 상태 변했을 때만
-                if detected[i]:
-                    print(f"{i}번 런닝머신 사람 등장!")
-                else:
-                    print(f"{i}번 런닝머신 사람 퇴장!")
-
-            if detected[i]:
-                state.TREADMILL[i] = "/static/img/onhuman.png"
-            else:
-                state.TREADMILL[i] = "/static/img/offhuman.png"
+            if detected[i] != prev_detected[i]:
+                print(f"[Treadmill] #{i} {'entered' if detected[i] else 'left'}")
+            state.TREADMILL[i] = "/static/img/onhuman.png" if detected[i] else "/static/img/offhuman.png"
 
         prev_detected = detected.copy()
-
-
-
-
-        # print("변경")
