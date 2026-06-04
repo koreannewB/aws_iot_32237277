@@ -115,15 +115,26 @@ class GymDashboard {
  
   _updateTowels(data) {
     this.el.towelList.innerHTML = Object.values(data).map(st => {
-      const pct   = Math.round((st.count / st.max) * 100);
-      const color = pct > 60 ? 'var(--accent-green)'
-                  : pct > 30 ? 'var(--accent-yellow)'
-                  : 'var(--accent-red)';
+      // 1. NaN(에러) 방지: max 값이 0이거나 없을 경우 기본값 1 부여
+      const safeMax = (st.max && st.max > 0) ? st.max : 1;
+      
+      // 2. UI 깨짐 방지: 표시되는 수건 숫자가 0 ~ max 사이를 벗어나지 않도록 강제 고정
+      const safeCount = Math.max(0, Math.min(safeMax, st.count));
+      
+      // 3. 그래프 너비 고정: 백분율을 무조건 0% ~ 100% 사이로 제한
+      let pct = Math.round((safeCount / safeMax) * 100);
+      pct = Math.max(0, Math.min(100, pct)); 
+
+      // 4. 색상 표시 기준 (원하시는 알림 기준에 맞춰 숫자를 조절하셔도 좋습니다)
+      const color = pct > 60 ? 'var(--accent-green)'   // 60% 초과면 초록색 (여유)
+                  : pct > 30 ? 'var(--accent-yellow)'  // 30% 초과면 노란색 (주의)
+                  : 'var(--accent-red)';               // 30% 이하면 빨간색 (부족)
+                  
       return `
         <div class="towel-item">
           <div class="towel-row">
             <span class="towel-name">${st.name}</span>
-            <span class="towel-count" style="color:${color}">${st.count} / ${st.max}</span>
+            <span class="towel-count" style="color:${color}">${safeCount} / ${safeMax}</span>
           </div>
           <div class="towel-track">
             <div class="towel-fill" style="width:${pct}%; background:${color}"></div>
@@ -131,7 +142,7 @@ class GymDashboard {
         </div>
       `;
     }).join('');
-  }
+  } 
  
   _updateEquipment(data) {
     data.forEach(eq => {
