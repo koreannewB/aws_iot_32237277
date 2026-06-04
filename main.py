@@ -30,13 +30,13 @@ async def tm_data():
     }
 
 
- @app.get("/toweldata")
- async def towel_data():
+@app.get("/toweldata")
+async def towel_data():
      return state.TOWEL
 
 
- @app.get("/equipmentdata")
- async def equipment_data():
+@app.get("/equipmentdata")
+async def equipment_data():
      return state.EQUIPMENT
 
 
