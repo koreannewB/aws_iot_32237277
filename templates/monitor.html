@@ -1,17 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YOLO Monitor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 720px;
+        }
+        .title-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222;
+        }
+        .badges {
+            display: flex;
+            gap: 8px;
+        }
+        .badge {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #f0f2f5;
+            color: #555;
+        }
+        #fpsBadge { color: #00b96b; }
+        .video-wrap {
+            width: 672px;
+            height: 378px;
+            background: #111;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #yolo-view {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .footer {
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
 </head>
-<body style="margin:0; background:#000; display:flex; justify-content:center; align-items:center; height:100vh;">
-    <img id="yolo-view" style="max-height:100vh; max-width:100%; object-fit:contain;">
+<body>
+    <div class="container">
+        <div class="title-row">
+            <span class="title">📷 YOLO Monitor</span>
+            <div class="badges">
+                <span class="badge" id="fpsBadge">-- fps</span>
+                <span class="badge" id="timeBadge">--:--:--</span>
+            </div>
+        </div>
+        <div class="video-wrap">
+            <img id="yolo-view" alt="YOLO stream">
+        </div>
+        <div class="footer">Smart Gym IoT · Real-time camera feed</div>
+    </div>
+
     <script>
-    setInterval(async () => {
-        const res = await fetch('/video')
-        const data = await res.json()
-        if(data.frame)
-            document.getElementById('yolo-view').src = 'data:image/jpeg;base64,' + data.frame
-    }, 100)
+        const img       = document.getElementById('yolo-view');
+        const fpsBadge  = document.getElementById('fpsBadge');
+        const timeBadge = document.getElementById('timeBadge');
+
+        let lastTime   = performance.now();
+        let frameCount = 0;
+
+        setInterval(() => {
+            timeBadge.textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
+        }, 1000);
+
+        async function fetchFrame() {
+            try {
+                const res  = await fetch('/video');
+                const data = await res.json();
+                if (data.frame) {
+                    img.src = 'data:image/jpeg;base64,' + data.frame;
+                    frameCount++;
+                    const now = performance.now();
+                    if (now - lastTime >= 1000) {
+                        fpsBadge.textContent = frameCount + ' fps';
+                        frameCount = 0;
+                        lastTime = now;
+                    }
+                }
+            } catch(e) {
+                console.warn('fetch error', e);
+            }
+            setTimeout(fetchFrame, 100);
+        }
+
+        fetchFrame();
     </script>
 </body>
 </html>
