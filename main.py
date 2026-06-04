@@ -4,8 +4,8 @@
 import threading
 import state
 import treadmill
-#import towel_remaining
-#import fitness_equipment
+import towel_remaining
+import fitness_equipment
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
@@ -30,14 +30,14 @@ async def tm_data():
     }
 
 
-# @app.get("/toweldata")
-# async def towel_data():
-#     return state.TOWEL
+ @app.get("/toweldata")
+ async def towel_data():
+     return state.TOWEL
 
 
-# @app.get("/equipmentdata")
-# async def equipment_data():
-#     return state.EQUIPMENT
+ @app.get("/equipmentdata")
+ async def equipment_data():
+     return state.EQUIPMENT
 
 
 @app.get("/monitor")
