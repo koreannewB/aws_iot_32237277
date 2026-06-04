@@ -19,11 +19,9 @@ def setup_ultrasonic():
     time.sleep(2)
 
 def measure_distance(trig, echo):
-    # 초음파 발사 전 확실하게 핀을 끄고 안정화 (노이즈 방지)
     GPIO.output(trig, False)
     time.sleep(0.002)
 
-    # 10us 펄스 전송
     GPIO.output(trig, True)
     time.sleep(0.00001)
     GPIO.output(trig, False)
@@ -31,15 +29,19 @@ def measure_distance(trig, echo):
     start_time = time.time()
     stop_time = time.time()
 
-    # 타임아웃 제한 없이 Echo 핀이 High가 될 때까지 무한 대기
+    # 타임아웃을 다시 추가하되, 시간을 0.1초로 넉넉하게 늘림
+    timeout = time.time() + 0.1
     while GPIO.input(echo) == 0:
         start_time = time.time()
+        if time.time() > timeout:
+            return None
 
-    # 타임아웃 제한 없이 Echo 핀이 Low가 될 때까지 무한 대기
+    timeout = time.time() + 0.1
     while GPIO.input(echo) == 1:
         stop_time = time.time()
+        if time.time() > timeout:
+            return None
 
-    # 시간 차이를 통해 거리 계산 (음속 34300 cm/s)
     time_elapsed = stop_time - start_time
     distance = (time_elapsed * 34300) / 2
     return distance
@@ -51,26 +53,25 @@ def run():
             for name, pins in ULTRASONIC_SENSORS.items():
                 dist = measure_distance(pins["trig"], pins["echo"])
                 
-                # 비정상적으로 튄 값(400cm 이상) 방어 로직 유지
-                if dist > 400:
-                    print(f"[{name}] 거리 비정상 튐: {dist:.2f} cm (무시됨)")
-                else:
-                    print(f"[{name}] 거리: {dist:.2f} cm")
-                    
-                    sensor_id = int(name.split("_")[1]) 
-                    if sensor_id in state.TOWEL:
-                        # 임시 수건 계산식
-                        calculated_count = state.TOWEL[sensor_id]["max"] - int(dist / 2)
-                        calculated_count = max(0, min(state.TOWEL[sensor_id]["max"], calculated_count))
+                if dist is not None:
+                    if dist > 400:
+                        print(f"[{name}] 거리 비정상 튐: {dist:.2f} cm (무시됨)")
+                    else:
+                        print(f"[{name}] 거리: {dist:.2f} cm")
                         
-                        state.TOWEL[sensor_id]["count"] = calculated_count
+                        sensor_id = int(name.split("_")[1]) 
+                        if sensor_id in state.TOWEL:
+                            calculated_count = state.TOWEL[sensor_id]["max"] - int(dist / 2)
+                            calculated_count = max(0, min(state.TOWEL[sensor_id]["max"], calculated_count))
+                            
+                            state.TOWEL[sensor_id]["count"] = calculated_count
+                else:
+                    # 신호가 없으면 무한 대기하지 않고 실패로 넘김
+                    print(f"[{name}] 측정 실패 (타임아웃 - 배선/센서 점검 필요)")
                 
-                # 센서 간 간섭 방지를 위한 짧은 대기
                 time.sleep(0.06) 
                 
             print("-" * 30)
-            
-            # 전체 센서 1사이클 측정 후 대기
             time.sleep(0.2)
             
     except KeyboardInterrupt:
