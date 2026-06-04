@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>YOLO 모니터</title>
+    <title>YOLO Monitor</title>
 </head>
-<body style="background:#000; display:flex; justify-content:center;">
-    <img id="yolo-view" style="height:100vh;">
+<body style="margin:0; background:#000; display:flex; justify-content:center; align-items:center; height:100vh;">
+    <img id="yolo-view" style="max-height:100vh; max-width:100%; object-fit:contain;">
     <script>
     setInterval(async () => {
         const res = await fetch('/video')
