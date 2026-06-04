@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 
-model = YOLO('best.pt')
+model = YOLO('iotsmart_gym.pt')
 cap = cv2.VideoCapture("ex1.mp4")
 
 while True:
