@@ -10,7 +10,7 @@ __pycache__/
 # YOLO/데이터셋 관련 (용량이 큰 경우)
 datasets/
 runs/
-*.pt
+
 ex1.mp4
 best.pt
 last.pt
