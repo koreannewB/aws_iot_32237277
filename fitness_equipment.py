@@ -63,6 +63,7 @@ def run():
 
                 # state.py 업데이트 (웹서버로 전송됨)
                 if idx < len(state.EQUIPMENT):
+                    state.EQUIPMENT[idx]["id"]     = idx + 1          # ← 추가 (JS id와 맞춤)
                     state.EQUIPMENT[idx]["status"] = "in_use" if is_in_use else "available"
                     state.EQUIPMENT[idx]["in_use"] = 1 if is_in_use else 0
 

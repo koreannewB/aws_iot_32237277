@@ -60,12 +60,12 @@ def main():
         pass
 
     thread_treadmill = threading.Thread(target=treadmill.trail_detect_run, daemon=True)
-    thread_towel = threading.Thread(target=towel_remaining.run, daemon=True)
-    thread_fitness = threading.Thread(target=fitness_equipment.run, daemon=True)
+    # thread_towel = threading.Thread(target=towel_remaining.run, daemon=True)
+    # thread_fitness = threading.Thread(target=fitness_equipment.run, daemon=True)
 
     thread_treadmill.start()
-    thread_towel.start()
-    thread_fitness.start()
+    # thread_towel.start()
+    # thread_fitness.start()
     listener = ngrok.forward(8000, authtoken="3EI7dmyLqQxNuRDkDNYIk0j5Tz7_RiPxTMvjMPmnbQR9sS8f")
     print(f"\n🌐 스마트폰 접속 주소: {listener.url()}\n")
     uvicorn.run(app, host="0.0.0.0", port=8000)
