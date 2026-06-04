@@ -8,14 +8,6 @@ ULTRASONIC_SENSORS = {
     "sensor_3": {"trig": 9,  "echo": 11},
 }
 
-EMPTY_DIST = 15.0  # distance when no towels (cm)
-FULL_DIST  =  3.0  # distance when full (cm)
-
-def dist_to_count(dist, max_count):
-    dist = max(FULL_DIST, min(EMPTY_DIST, dist))
-    ratio = (EMPTY_DIST - dist) / (EMPTY_DIST - FULL_DIST)
-    return round(ratio * max_count)
-
 def setup_ultrasonic():
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
@@ -23,35 +15,34 @@ def setup_ultrasonic():
         GPIO.setup(pins["trig"], GPIO.OUT)
         GPIO.setup(pins["echo"], GPIO.IN)
         GPIO.output(pins["trig"], False)
-    print("[Towel] Ultrasonic sensors initialized, stabilizing...")
+    print("초음파 센서 초기화 완료. 안정화 대기 중...")
     time.sleep(2)
 
 def measure_distance(trig, echo):
-    # stabilize before pulse (noise prevention)
+    # 초음파 발사 전 확실하게 핀을 끄고 안정화 (노이즈 방지)
     GPIO.output(trig, False)
     time.sleep(0.002)
 
-    # send 10us pulse
+    # 10us 펄스 전송
     GPIO.output(trig, True)
     time.sleep(0.00001)
     GPIO.output(trig, False)
 
     start_time = time.time()
-    stop_time  = time.time()
+    stop_time = time.time()
 
-    timeout = time.time() + 0.05
+    # 타임아웃 제한 없이 Echo 핀이 High가 될 때까지 무한 대기
     while GPIO.input(echo) == 0:
         start_time = time.time()
-        if time.time() > timeout:
-            return None
 
-    timeout = time.time() + 0.05
+    # 타임아웃 제한 없이 Echo 핀이 Low가 될 때까지 무한 대기
     while GPIO.input(echo) == 1:
         stop_time = time.time()
-        if time.time() > timeout:
-            return None
 
-    return (stop_time - start_time) * 34300 / 2
+    # 시간 차이를 통해 거리 계산 (음속 34300 cm/s)
+    time_elapsed = stop_time - start_time
+    distance = (time_elapsed * 34300) / 2
+    return distance
 
 def run():
     try:
@@ -59,30 +50,33 @@ def run():
         while True:
             for name, pins in ULTRASONIC_SENSORS.items():
                 dist = measure_distance(pins["trig"], pins["echo"])
-                sensor_id = int(name.split("_")[1])
-
-                if dist is not None:
-                    if dist > 400:
-                        print(f"[Towel] #{sensor_id} abnormal value: {dist:.2f}cm (ignored)")
-                    else:
-                        if sensor_id in state.TOWEL:
-                            max_count = state.TOWEL[sensor_id]["max"]
-                            count = dist_to_count(dist, max_count)
-                            state.TOWEL[sensor_id]["count"] = count
-                            print(f"[Towel] #{sensor_id} {dist:.1f}cm → {count}/{max_count}")
+                
+                # 비정상적으로 튄 값(400cm 이상) 방어 로직 유지
+                if dist > 400:
+                    print(f"[{name}] 거리 비정상 튐: {dist:.2f} cm (무시됨)")
                 else:
-                    print(f"[Towel] #{sensor_id} timeout")
-
-                # wait for echo to clear between sensors
-                time.sleep(0.06)
-
-            # wait after full cycle
+                    print(f"[{name}] 거리: {dist:.2f} cm")
+                    
+                    sensor_id = int(name.split("_")[1]) 
+                    if sensor_id in state.TOWEL:
+                        # 임시 수건 계산식
+                        calculated_count = state.TOWEL[sensor_id]["max"] - int(dist / 2)
+                        calculated_count = max(0, min(state.TOWEL[sensor_id]["max"], calculated_count))
+                        
+                        state.TOWEL[sensor_id]["count"] = calculated_count
+                
+                # 센서 간 간섭 방지를 위한 짧은 대기
+                time.sleep(0.06) 
+                
+            print("-" * 30)
+            
+            # 전체 센서 1사이클 측정 후 대기
             time.sleep(0.2)
-
+            
     except KeyboardInterrupt:
-        print("[Towel] Stopped")
+        print("측정 종료")
     except Exception as e:
-        print(f"[Towel] Error: {e}")
+        print(f"초음파 센서 에러: {e}")
     finally:
         GPIO.cleanup()
 
