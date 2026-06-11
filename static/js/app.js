@@ -171,12 +171,21 @@ class GymDashboard {
     return 'Low';
   }
 
+  _towelPercent(station) {
+    const explicitPercent = Number(station.percent);
+    if (Number.isFinite(explicitPercent)) {
+      return Math.max(0, Math.min(100, Math.round(explicitPercent)));
+    }
+
+    const max = Number(station.max) > 0 ? Number(station.max) : 1;
+    const count = Math.max(0, Math.min(max, Number(station.count) || 0));
+    return Math.round((count / max) * 100);
+  }
+
   _updateTowels(data) {
     const towels = Object.values(data ?? {});
     this.el.towelList.innerHTML = towels.map((station, index) => {
-      const max = Number(station.max) > 0 ? Number(station.max) : 1;
-      const count = Math.max(0, Math.min(max, Number(station.count) || 0));
-      const percent = Math.round((count / max) * 100);
+      const percent = this._towelPercent(station);
       const color = this._towelColor(percent);
       const label = this._towelLabel(percent);
       const fallbackName = `Dispenser ${String(index + 1).padStart(2, '0')}`;

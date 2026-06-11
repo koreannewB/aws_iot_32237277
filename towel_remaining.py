@@ -8,6 +8,9 @@ ULTRASONIC_SENSORS = {
     "sensor_3": {"trig": 9,  "echo": 11},
 }
 
+FULL_TOWEL_DISTANCE_CM = 2.5
+EMPTY_TOWEL_DISTANCE_CM = 15.0
+
 def setup_ultrasonic():
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
@@ -46,6 +49,16 @@ def measure_distance(trig, echo):
     distance = (time_elapsed * 34300) / 2
     return distance
 
+def distance_to_percent(distance_cm):
+    if distance_cm <= FULL_TOWEL_DISTANCE_CM:
+        return 100
+    if distance_cm >= EMPTY_TOWEL_DISTANCE_CM:
+        return 0
+
+    usable_range = EMPTY_TOWEL_DISTANCE_CM - FULL_TOWEL_DISTANCE_CM
+    percent = ((EMPTY_TOWEL_DISTANCE_CM - distance_cm) / usable_range) * 100
+    return int(round(percent))
+
 def run():
     try:
         setup_ultrasonic()
@@ -61,10 +74,11 @@ def run():
                         
                         sensor_id = int(name.split("_")[1]) 
                         if sensor_id in state.TOWEL:
-                            calculated_count = state.TOWEL[sensor_id]["max"] - int(dist / 2)
-                            calculated_count = max(0, min(state.TOWEL[sensor_id]["max"], calculated_count))
-                            
-                            state.TOWEL[sensor_id]["count"] = calculated_count
+                            percent = distance_to_percent(dist)
+                            state.TOWEL[sensor_id]["count"] = percent
+                            state.TOWEL[sensor_id]["max"] = 100
+                            state.TOWEL[sensor_id]["percent"] = percent
+                            state.TOWEL[sensor_id]["distance_cm"] = round(dist, 1)
                 else:
                     # 신호가 없으면 무한 대기하지 않고 실패로 넘김
                     print(f"[{name}] 측정 실패 (타임아웃 - 배선/센서 점검 필요)")

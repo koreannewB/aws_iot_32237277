@@ -1,10 +1,9 @@
-# state.py
 TREADMILL = {1: "", 2: "", 3: "", 4: ""}
 
 TOWEL = {
-    1: {"name": "Dispenser 1", "count": 15, "max": 20},
-    2: {"name": "Dispenser 2", "count": 8,  "max": 20},
-    3: {"name": "Dispenser 3", "count": 20, "max": 20},  # ← 추가
+    1: {"name": "Dispenser 1", "count": 100, "max": 100, "percent": 100, "distance_cm": None},
+    2: {"name": "Dispenser 2", "count": 60,  "max": 100, "percent": 60,  "distance_cm": None},
+    3: {"name": "Dispenser 3", "count": 0,   "max": 100, "percent": 0,   "distance_cm": None},
 }
 
 EQUIPMENT = [
