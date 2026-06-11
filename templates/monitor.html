@@ -41,7 +41,7 @@
         }
         #fpsBadge { color: #00b96b; }
 
-        /* 영상 + zone 오버레이 래퍼 */
+        /* Video frame and zone overlay wrapper */
         .video-wrap {
             position: relative;
             width: 620px;
@@ -58,7 +58,7 @@
             display: block;
         }
 
-        /* zone 구분선 + 번호 오버레이 */
+        /* Zone separators and labels */
         .zone-overlay {
             position: absolute;
             top: 0; left: 0;
@@ -96,13 +96,13 @@
 
         <div class="video-wrap">
             <img id="yolo-view" alt="YOLO stream">
-            <!-- zone 오버레이: 4등분 -->
+            <!-- Four-zone overlay -->
             <div class="zone-overlay">
-                <!-- 구분선 3개 -->
+                <!-- Three separator lines -->
                 <div class="zone-line" style="left:25%"></div>
                 <div class="zone-line" style="left:50%"></div>
                 <div class="zone-line" style="left:75%"></div>
-                <!-- 존 번호 (각 구역 중앙) -->
+                <!-- Zone numbers centered in each area -->
                 <div class="zone-label" style="left:12.5%">1</div>
                 <div class="zone-label" style="left:37.5%">2</div>
                 <div class="zone-label" style="left:62.5%">3</div>

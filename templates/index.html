@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,29 +17,29 @@
       <nav class="side-nav">
         <a class="nav-link active" href="/">
           <span class="nav-icon">▦</span>
-          <span>대시보드</span>
+          <span>Dashboard</span>
         </a>
         <a class="nav-link" href="/monitor">
           <span class="nav-icon">◆</span>
-          <span>장비 관리</span>
+          <span>Equipment</span>
         </a>
         <a class="nav-link" href="/">
           <span class="nav-icon">◉</span>
-          <span>사용자 현황</span>
+          <span>Users</span>
         </a>
         <a class="nav-link" href="/">
           <span class="nav-icon">◌</span>
-          <span>유지보수</span>
+          <span>Maintenance</span>
         </a>
         <a class="nav-link" href="/">
           <span class="nav-icon">▣</span>
-          <span>리포트</span>
+          <span>Reports</span>
         </a>
       </nav>
 
       <a class="nav-link side-settings" href="/">
         <span class="nav-icon">⚙</span>
-        <span>설정</span>
+        <span>Settings</span>
       </a>
     </aside>
 
@@ -47,42 +47,42 @@
       <header class="topbar">
         <div class="topbar-title">
           <span class="topbar-kicker">Live Operations</span>
-          <h1>스마트짐 관제 대시보드</h1>
+          <h1>Smart Gym Control Dashboard</h1>
         </div>
         <div class="topbar-actions">
           <div class="connection-badge loading" id="connBadge">
             <span class="conn-dot"></span>
-            <span class="conn-label" id="connLabel">시스템 확인 중</span>
+            <span class="conn-label" id="connLabel">Checking System</span>
           </div>
           <div class="time-block">
             <span class="clock" id="clock">--:--:--</span>
-            <span class="sync-label">실시간 반영</span>
+            <span class="sync-label">Live Sync</span>
           </div>
-          <button class="icon-button" type="button" aria-label="알림">●</button>
-          <button class="icon-button" type="button" aria-label="계정">♟</button>
+          <button class="icon-button" type="button" aria-label="Notifications">●</button>
+          <button class="icon-button" type="button" aria-label="Account">♟</button>
         </div>
       </header>
 
-      <section class="summary-grid" aria-label="요약 현황">
+      <section class="summary-grid" aria-label="Summary">
         <article class="summary-card">
           <div class="summary-icon">▥</div>
           <div>
-            <span class="summary-label">전체 런닝머신</span>
-            <strong class="summary-value" id="statTotal">4 대</strong>
+            <span class="summary-label">Total Running Machines</span>
+            <strong class="summary-value" id="statTotal">4 Units</strong>
           </div>
         </article>
         <article class="summary-card warning">
           <div class="summary-icon">●</div>
           <div>
-            <span class="summary-label">사용 중</span>
-            <strong class="summary-value" id="statInUse">- 대</strong>
+            <span class="summary-label">In Use</span>
+            <strong class="summary-value" id="statInUse">- Units</strong>
           </div>
         </article>
         <article class="summary-card success">
           <div class="summary-icon">✓</div>
           <div>
-            <span class="summary-label">사용 가능</span>
-            <strong class="summary-value" id="statAvailable">- 대</strong>
+            <span class="summary-label">Available</span>
+            <strong class="summary-value" id="statAvailable">- Units</strong>
           </div>
         </article>
       </section>
@@ -91,9 +91,9 @@
         <div class="section-header">
           <h2 class="section-title">
             <span class="section-icon">◆</span>
-            런닝머신 현황
+            Running Machine Status
           </h2>
-          <div class="section-badge" id="tmBadge">집계 중</div>
+          <div class="section-badge" id="tmBadge">Loading</div>
         </div>
         <div class="treadmill-grid" id="tmGrid"></div>
       </section>
@@ -103,7 +103,7 @@
           <div class="section-header">
             <h2 class="section-title">
               <span class="section-icon">▥</span>
-              수건 디스펜서 현황
+              Towel Dispenser Status
             </h2>
           </div>
           <div class="towel-list" id="towelList"></div>
@@ -113,7 +113,7 @@
           <div class="section-header">
             <h2 class="section-title">
               <span class="section-icon">▣</span>
-              기타 장비 현황
+              Equipment Status
             </h2>
           </div>
           <div class="equip-grid" id="equipGrid"></div>

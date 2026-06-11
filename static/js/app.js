@@ -4,12 +4,12 @@ class GymDashboard {
     this.POLL_INTERVAL = 1000;
     this.treadmillUsageTimes = ['24:12', '', '12:45', ''];
     this.equipmentDefaults = [
-      { id: 1, name: '벤치 프레스 01', icon: '▣' },
-      { id: 2, name: '덤벨 랙 A', icon: '▦' },
-      { id: 3, name: '레그 프레스', icon: '↻' },
-      { id: 4, name: '케이블 머신', icon: '↻' },
-      { id: 5, name: '풀업 스테이션', icon: '━' },
-      { id: 6, name: '런닝머신 02', icon: '↻' },
+      { id: 1, name: 'Bench Press 01', icon: '▣' },
+      { id: 2, name: 'Dumbbell Rack A', icon: '▦' },
+      { id: 3, name: 'Leg Press', icon: '↻' },
+      { id: 4, name: 'Cable Machine', icon: '↻' },
+      { id: 5, name: 'Pull-up Station', icon: '━' },
+      { id: 6, name: 'Running 02', icon: '↻' },
     ];
 
     this.el = {
@@ -43,7 +43,7 @@ class GymDashboard {
 
   _startClock() {
     const tick = () => {
-      this.el.clock.textContent = new Date().toLocaleTimeString('ko-KR', {
+      this.el.clock.textContent = new Date().toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
@@ -57,9 +57,9 @@ class GymDashboard {
   _setConnection(state) {
     this.el.connBadge.className = `connection-badge ${state}`;
     const labels = {
-      connected: '시스템 정상',
-      error: '연결 점검',
-      loading: '시스템 확인 중',
+      connected: 'System Normal',
+      error: 'Check Connection',
+      loading: 'Checking System',
     };
     this.el.connLabel.textContent = labels[state] ?? labels.loading;
   }
@@ -86,15 +86,15 @@ class GymDashboard {
       return `
         <article class="tm-card loading" id="tm-card-${id}">
           <div class="tm-card-head">
-            <span class="tm-name">런닝머신 ${String(id).padStart(2, '0')}</span>
-            <span class="tm-chip" id="tm-chip-${id}">확인 중</span>
+            <span class="tm-name">Machine ${String(id).padStart(2, '0')}</span>
+            <span class="tm-chip" id="tm-chip-${id}">Checking</span>
           </div>
           <div class="tm-figure">
             ${this._machineIcon()}
           </div>
           <div class="tm-meta">
-            <span class="tm-meta-label" id="tm-meta-label-${id}">상태</span>
-            <strong class="tm-status-text" id="tm-txt-${id}">연결 중</strong>
+            <span class="tm-meta-label" id="tm-meta-label-${id}">Status</span>
+            <strong class="tm-status-text" id="tm-txt-${id}">Connecting</strong>
           </div>
         </article>
       `;
@@ -107,7 +107,7 @@ class GymDashboard {
         <span class="equip-icon">${item.icon}</span>
         <div class="equip-info">
           <div class="equip-name">${this._escapeHTML(item.name)}</div>
-          <div class="equip-status" id="equip-status-${item.id}">연결 중...</div>
+          <div class="equip-status" id="equip-status-${item.id}">Connecting...</div>
         </div>
       </article>
     `).join('');
@@ -132,28 +132,28 @@ class GymDashboard {
       card.className = `tm-card ${state}`;
 
       if (isInUse) {
-        chip.textContent = '사용 중';
-        label.textContent = '사용 시간';
+        chip.textContent = 'In Use';
+        label.textContent = 'Use Time';
         text.textContent = this.treadmillUsageTimes[id - 1] || '12:00';
         inUse++;
       } else if (isOff) {
-        chip.textContent = '대기 중';
-        label.textContent = '상태';
-        text.textContent = '사용 가능';
+        chip.textContent = 'Ready';
+        label.textContent = 'Status';
+        text.textContent = 'Available';
         available++;
       } else {
-        chip.textContent = '확인 중';
-        label.textContent = '상태';
-        text.textContent = '연결 중';
+        chip.textContent = 'Checking';
+        label.textContent = 'Status';
+        text.textContent = 'Connecting';
       }
     }
 
-    this.el.statTotal.textContent = '4 대';
-    this.el.statInUse.textContent = `${inUse} 대`;
-    this.el.statAvailable.textContent = `${available} 대`;
+    this.el.statTotal.textContent = '4 Units';
+    this.el.statInUse.textContent = `${inUse} Units`;
+    this.el.statAvailable.textContent = `${available} Units`;
     this.el.tmBadge.innerHTML = `
-      <span class="badge-dot orange"></span>사용중 ${inUse}
-      <span class="badge-dot green"></span>대기중 ${available}
+      <span class="badge-dot orange"></span>In Use ${inUse}
+      <span class="badge-dot green"></span>Ready ${available}
     `;
   }
 
@@ -166,9 +166,9 @@ class GymDashboard {
   }
 
   _towelLabel(percent) {
-    if (percent >= 70) return '충분';
-    if (percent >= 35) return '보통';
-    return '부족';
+    if (percent >= 70) return 'Good';
+    if (percent >= 35) return 'Moderate';
+    return 'Low';
   }
 
   _updateTowels(data) {
@@ -179,7 +179,7 @@ class GymDashboard {
       const percent = Math.round((count / max) * 100);
       const color = this._towelColor(percent);
       const label = this._towelLabel(percent);
-      const fallbackName = `디스펜서 ${String(index + 1).padStart(2, '0')}`;
+      const fallbackName = `Dispenser ${String(index + 1).padStart(2, '0')}`;
       const name = this._escapeHTML(station.name || fallbackName);
 
       return `
@@ -191,7 +191,7 @@ class GymDashboard {
             </div>
             <strong class="towel-percent">${percent}%</strong>
           </div>
-          <div class="towel-track" aria-label="${name} 잔량 ${percent}%">
+          <div class="towel-track" aria-label="${name} remaining ${percent}%">
             <div class="towel-fill"></div>
           </div>
         </article>
@@ -211,14 +211,14 @@ class GymDashboard {
       if (!equipment) {
         card.className = 'equip-card loading';
         status.className = 'equip-status loading';
-        status.textContent = '연결 중...';
+        status.textContent = 'Connecting...';
         return;
       }
 
       const isInUse = equipment.status === 'in_use' || equipment.in_use === 1;
       card.className = `equip-card ${isInUse ? 'in_use' : 'available'}`;
       status.className = `equip-status ${isInUse ? 'in_use' : 'available'}`;
-      status.textContent = isInUse ? '사용 중' : '대기 중';
+      status.textContent = isInUse ? 'In Use' : 'Ready';
     });
   }
 

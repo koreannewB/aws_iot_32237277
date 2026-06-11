@@ -10,10 +10,10 @@ const API = (() => {
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
     try {
         const res = await fetch(url, { signal: controller.signal });
-        if (!res.ok) return null;  // 404면 null 반환
+        if (!res.ok) return null;
         return await res.json();
     } catch {
-        return null;  // 에러나도 null 반환
+        return null;
     } finally {
         clearTimeout(timer);
     }
