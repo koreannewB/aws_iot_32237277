@@ -255,15 +255,15 @@ EC2×1 (장애)1000	2.079초	        9.601초	        462	100%
 
     7.이를 통해 AWS의 ALB를 활용한 고가용성(High Availability) 구조를 직접 구축하고 검증할 수 있었다.
 
-## 시스템 구조
+## 실제 작동되는 웹사이트
 
 ![시스템 구조](images/image.png)
 
-## ALB 구성
+## ALB 구성 1인스턴스 중지됨
 
 ![ALB](images/image2.png)
 
-## 벤치마크 결과
+## ssh내부에서 깃받아서 설치
 
 ![벤치마크](images/image3.png)
 
