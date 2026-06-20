@@ -30,7 +30,7 @@ def trail_detect_run():
     global current_frame
     print("[Treadmill] Detection started")
 
-    USE_CAMERA = True
+    USE_CAMERA = False
     if USE_CAMERA:
         from picamera2 import Picamera2
         picam2 = Picamera2()
@@ -40,7 +40,7 @@ def trail_detect_run():
         picam2.configure(config)
         picam2.start()
     else:
-        cap = cv2.VideoCapture("iottest2.mp4")
+        cap = cv2.VideoCapture("awssmart.mp4")
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
