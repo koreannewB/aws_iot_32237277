@@ -256,7 +256,7 @@ EC2×1 (장애)1000	2.079초	        9.601초	        462	100%
     7.이를 통해 AWS의 ALB를 활용한 고가용성(High Availability) 구조를 직접 구축하고 검증할 수 있었다.
 
 
-
+<img src="images/image.png" width="700">
 
 
 # 부록 
