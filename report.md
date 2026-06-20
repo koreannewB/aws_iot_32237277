@@ -259,294 +259,294 @@ EC2×1 (장애)1000	2.079초	        9.601초	        462	100%
 
 
 
-부록 
+# 부록 
 
 
-실제 테스트 명령어
+    실제 테스트 명령어
 
-terraform init
-terraform validate
-terraform plan
-terraform apply
+    terraform init
+    terraform validate
+    terraform plan
+    terraform apply
 
-100명 동시 접속
-hey -n 5000 -c 100 http://ALB_DNS/
+    100명 동시 접속
+    hey -n 5000 -c 100 http://ALB_DNS/
 
-500명 동시 접속
-hey -n 10000 -c 500 http://ALB_DNS/
+    500명 동시 접속
+    hey -n 10000 -c 500 http://ALB_DNS/
 
-1000명 동시 접속
-hey -n 20000 -c 1000 http://ALB_DNS/
-
-
-2개의 인스턴스 100명 동시접속
-Summary:
-  Total:        10.0601 secs
-  Slowest:      0.6350 secs
-  Fastest:      0.1818 secs
-  Average:      0.1976 secs
-  Requests/sec: 497.0106
-
-  Total data:   21390000 bytes
-  Size/request: 4278 bytes
-
-Response time histogram:
-  0.182 [1]     |
-  0.227 [4891]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.272 [8]     |
-  0.318 [0]     |
-  0.363 [0]     |
-  0.408 [5]     |
-  0.454 [4]     |
-  0.499 [25]    |
-  0.544 [45]    |
-  0.590 [17]    |
-  0.635 [4]     |
+    1000명 동시 접속
+    hey -n 20000 -c 1000 http://ALB_DNS/
 
 
-Latency distribution:
-  10% in 0.1861 secs
-  25% in 0.1879 secs
-  50% in 0.1903 secs
-  75% in 0.1934 secs
-  90% in 0.1989 secs
-  95% in 0.2034 secs
-  99% in 0.5194 secs
+    2개의 인스턴스 100명 동시접속
+    Summary:
+    Total:        10.0601 secs
+    Slowest:      0.6350 secs
+    Fastest:      0.1818 secs
+    Average:      0.1976 secs
+    Requests/sec: 497.0106
 
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0038 secs, 0.1818 secs, 0.6350 secs
-  DNS-lookup:   0.0003 secs, 0.0000 secs, 0.0116 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0007 secs
-  resp wait:    0.1896 secs, 0.1807 secs, 0.3133 secs
-  resp read:    0.0032 secs, 0.0000 secs, 0.1052 secs
+    Total data:   21390000 bytes
+    Size/request: 4278 bytes
 
-Status code distribution:
-  [200] 5000 responses
-2개의 인스턴스 500명 동시접속
-
-Summary:
-  Total:        11.1236 secs
-  Slowest:      2.0995 secs
-  Fastest:      0.1818 secs
-  Average:      0.4448 secs
-  Requests/sec: 898.9913
-
-  Total data:   42780000 bytes
-  Size/request: 4278 bytes
-
-Response time histogram:
-  0.182 [1]     |
-  0.374 [4423]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.565 [2755]  |■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.757 [2209]  |■■■■■■■■■■■■■■■■■■■■
-  0.949 [307]   |■■■
-  1.141 [1]     |
-  1.332 [44]    |
-  1.524 [192]   |■■
-  1.716 [56]    |■
-  1.908 [1]     |
-  2.100 [11]    |
+    Response time histogram:
+    0.182 [1]     |
+    0.227 [4891]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    0.272 [8]     |
+    0.318 [0]     |
+    0.363 [0]     |
+    0.408 [5]     |
+    0.454 [4]     |
+    0.499 [25]    |
+    0.544 [45]    |
+    0.590 [17]    |
+    0.635 [4]     |
 
 
-Latency distribution:
-  10% in 0.1997 secs
-  25% in 0.2299 secs
-  50% in 0.4223 secs
-  75% in 0.5843 secs
-  90% in 0.6577 secs
-  95% in 0.7911 secs
-  99% in 1.5180 secs
+    Latency distribution:
+    10% in 0.1861 secs
+    25% in 0.1879 secs
+    50% in 0.1903 secs
+    75% in 0.1934 secs
+    90% in 0.1989 secs
+    95% in 0.2034 secs
+    99% in 0.5194 secs
 
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0124 secs, 0.1818 secs, 2.0995 secs
-  DNS-lookup:   0.0013 secs, 0.0000 secs, 0.0472 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0010 secs
-  resp wait:    0.2902 secs, 0.1804 secs, 1.1227 secs
-  resp read:    0.1421 secs, 0.0000 secs, 1.5375 secs
+    Details (average, fastest, slowest):
+    DNS+dialup:   0.0038 secs, 0.1818 secs, 0.6350 secs
+    DNS-lookup:   0.0003 secs, 0.0000 secs, 0.0116 secs
+    req write:    0.0000 secs, 0.0000 secs, 0.0007 secs
+    resp wait:    0.1896 secs, 0.1807 secs, 0.3133 secs
+    resp read:    0.0032 secs, 0.0000 secs, 0.1052 secs
 
-Status code distribution:
+    Status code distribution:
+    [200] 5000 responses
+    2개의 인스턴스 500명 동시접속
 
-  [200] 10000 responses
+    Summary:
+    Total:        11.1236 secs
+    Slowest:      2.0995 secs
+    Fastest:      0.1818 secs
+    Average:      0.4448 secs
+    Requests/sec: 898.9913
 
-2개의 인스턴스 1000명 동시접속
-  Summary:
-  Total:        21.7244 secs
-  Slowest:      4.3940 secs
-  Fastest:      0.1817 secs
-  Average:      0.9576 secs
-  Requests/sec: 920.6224
+    Total data:   42780000 bytes
+    Size/request: 4278 bytes
 
-  Total data:   85560000 bytes
-  Size/request: 4278 bytes
-
-Response time histogram:
-  0.182 [1]     |
-  0.603 [7282]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  1.024 [5393]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  1.445 [3125]  |■■■■■■■■■■■■■■■■■
-  1.867 [1893]  |■■■■■■■■■■
-  2.288 [1167]  |■■■■■■
-  2.709 [326]   |■■
-  3.130 [685]   |■■■■
-  3.552 [0]     |
-  3.973 [22]    |
-  4.394 [106]   |■
-
-
-Latency distribution:
-  10% in 0.1971 secs
-  25% in 0.3559 secs
-  50% in 0.7470 secs
-  75% in 1.2708 secs
-  90% in 2.0507 secs
-  95% in 2.4233 secs
-  99% in 3.0186 secs
-
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0100 secs, 0.1817 secs, 4.3940 secs
-  DNS-lookup:   0.0020 secs, 0.0000 secs, 0.0549 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0011 secs
-  resp wait:    0.4818 secs, 0.1807 secs, 3.4702 secs
-  resp read:    0.4485 secs, 0.0000 secs, 2.3044 secs
-
-Status code distribution:
-  [200] 20000 responses
+    Response time histogram:
+    0.182 [1]     |
+    0.374 [4423]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    0.565 [2755]  |■■■■■■■■■■■■■■■■■■■■■■■■■
+    0.757 [2209]  |■■■■■■■■■■■■■■■■■■■■
+    0.949 [307]   |■■■
+    1.141 [1]     |
+    1.332 [44]    |
+    1.524 [192]   |■■
+    1.716 [56]    |■
+    1.908 [1]     |
+    2.100 [11]    |
 
 
-2개의 인스턴스 + 1개 인스턴스 중지 100명 동시접속
+    Latency distribution:
+    10% in 0.1997 secs
+    25% in 0.2299 secs
+    50% in 0.4223 secs
+    75% in 0.5843 secs
+    90% in 0.6577 secs
+    95% in 0.7911 secs
+    99% in 1.5180 secs
 
-Summary:
-  Total:        11.9160 secs
-  Slowest:      0.8422 secs
-  Fastest:      0.1829 secs
-  Average:      0.2260 secs
-  Requests/sec: 419.6044
+    Details (average, fastest, slowest):
+    DNS+dialup:   0.0124 secs, 0.1818 secs, 2.0995 secs
+    DNS-lookup:   0.0013 secs, 0.0000 secs, 0.0472 secs
+    req write:    0.0000 secs, 0.0000 secs, 0.0010 secs
+    resp wait:    0.2902 secs, 0.1804 secs, 1.1227 secs
+    resp read:    0.1421 secs, 0.0000 secs, 1.5375 secs
 
-  Total data:   21390000 bytes
-  Size/request: 4278 bytes
+    Status code distribution:
 
-Response time histogram:
-  0.183 [1]     |
-  0.249 [4341]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.315 [550]   |■■■■■
-  0.381 [3]     |
-  0.447 [2]     |
-  0.513 [5]     |
-  0.578 [16]    |
-  0.644 [77]    |■
-  0.710 [0]     |
-  0.776 [0]     |
-  0.842 [5]     |
+    [200] 10000 responses
 
+    2개의 인스턴스 1000명 동시접속
+    Summary:
+    Total:        21.7244 secs
+    Slowest:      4.3940 secs
+    Fastest:      0.1817 secs
+    Average:      0.9576 secs
+    Requests/sec: 920.6224
 
-Latency distribution:
-  10% in 0.1919 secs
-  25% in 0.1994 secs
-  50% in 0.2157 secs
-  75% in 0.2314 secs
-  90% in 0.2565 secs
-  95% in 0.2726 secs
-  99% in 0.5923 secs
+    Total data:   85560000 bytes
+    Size/request: 4278 bytes
 
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0047 secs, 0.1829 secs, 0.8422 secs
-  DNS-lookup:   0.0009 secs, 0.0000 secs, 0.0404 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0003 secs
-  resp wait:    0.2012 secs, 0.1819 secs, 0.8142 secs
-  resp read:    0.0198 secs, 0.0000 secs, 0.1009 secs
-
-Status code distribution:
-  [200] 5000 responses
-
-2개의 인스턴스 + 1개 인스턴스 중지 500명 동시접속
+    Response time histogram:
+    0.182 [1]     |
+    0.603 [7282]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    1.024 [5393]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    1.445 [3125]  |■■■■■■■■■■■■■■■■■
+    1.867 [1893]  |■■■■■■■■■■
+    2.288 [1167]  |■■■■■■
+    2.709 [326]   |■■
+    3.130 [685]   |■■■■
+    3.552 [0]     |
+    3.973 [22]    |
+    4.394 [106]   |■
 
 
-Summary:
-  Total:        16.5633 secs
-  Slowest:      1.9050 secs
-  Fastest:      0.1828 secs
-  Average:      0.7958 secs
-  Requests/sec: 603.7458
+    Latency distribution:
+    10% in 0.1971 secs
+    25% in 0.3559 secs
+    50% in 0.7470 secs
+    75% in 1.2708 secs
+    90% in 2.0507 secs
+    95% in 2.4233 secs
+    99% in 3.0186 secs
 
-  Total data:   42780000 bytes
-  Size/request: 4278 bytes
+    Details (average, fastest, slowest):
+    DNS+dialup:   0.0100 secs, 0.1817 secs, 4.3940 secs
+    DNS-lookup:   0.0020 secs, 0.0000 secs, 0.0549 secs
+    req write:    0.0000 secs, 0.0000 secs, 0.0011 secs
+    resp wait:    0.4818 secs, 0.1807 secs, 3.4702 secs
+    resp read:    0.4485 secs, 0.0000 secs, 2.3044 secs
 
-Response time histogram:
-  0.183 [1]     |
-  0.355 [127]   |■
-  0.527 [9]     |
-  0.699 [216]   |■
-  0.872 [9255]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  1.044 [163]   |■
-  1.216 [0]     |
-  1.388 [0]     |
-  1.561 [0]     |
-  1.733 [0]     |
-  1.905 [229]   |■
+    Status code distribution:
+    [200] 20000 responses
 
 
-Latency distribution:
-  10% in 0.7289 secs
-  25% in 0.7427 secs
-  50% in 0.7844 secs
-  75% in 0.8048 secs
-  90% in 0.8397 secs
-  95% in 0.8542 secs
-  99% in 1.8472 secs
+    2개의 인스턴스 + 1개 인스턴스 중지 100명 동시접속
 
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0129 secs, 0.1828 secs, 1.9050 secs
-  DNS-lookup:   0.0013 secs, 0.0000 secs, 0.0385 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0003 secs
-  resp wait:    0.4879 secs, 0.1816 secs, 1.3073 secs
-  resp read:    0.2950 secs, 0.0000 secs, 0.6098 secs
+    Summary:
+    Total:        11.9160 secs
+    Slowest:      0.8422 secs
+    Fastest:      0.1829 secs
+    Average:      0.2260 secs
+    Requests/sec: 419.6044
 
-Status code distribution:
-  [200] 10000 responses
+    Total data:   21390000 bytes
+    Size/request: 4278 bytes
 
-
-2개의 인스턴스 + 1개 인스턴스 중지 1000명 동시접속
-
-Summary:
-  Total:        43.3109 secs
-  Slowest:      9.6009 secs
-  Fastest:      0.1831 secs
-  Average:      2.0786 secs
-  Requests/sec: 461.7770
-
-  Total data:   85560000 bytes
-  Size/request: 4278 bytes
-
-Response time histogram:
-  0.183 [1]     |
-  1.125 [1180]  |■■■
-  2.067 [15145] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  3.008 [1419]  |■■■■
-  3.950 [951]   |■■■
-  4.892 [113]   |
-  5.834 [297]   |■
-  6.776 [654]   |■■
-  7.717 [226]   |■
-  8.659 [2]     |
-  9.601 [12]    |
+    Response time histogram:
+    0.183 [1]     |
+    0.249 [4341]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    0.315 [550]   |■■■■■
+    0.381 [3]     |
+    0.447 [2]     |
+    0.513 [5]     |
+    0.578 [16]    |
+    0.644 [77]    |■
+    0.710 [0]     |
+    0.776 [0]     |
+    0.842 [5]     |
 
 
-Latency distribution:
-  10% in 1.4529 secs
-  25% in 1.6401 secs
-  50% in 1.7626 secs
-  75% in 1.8967 secs
-  90% in 3.1588 secs
-  95% in 5.5531 secs
-  99% in 7.1259 secs
+    Latency distribution:
+    10% in 0.1919 secs
+    25% in 0.1994 secs
+    50% in 0.2157 secs
+    75% in 0.2314 secs
+    90% in 0.2565 secs
+    95% in 0.2726 secs
+    99% in 0.5923 secs
 
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0115 secs, 0.1831 secs, 9.6009 secs
-  DNS-lookup:   0.0019 secs, 0.0000 secs, 0.0581 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0009 secs
-  resp wait:    0.9611 secs, 0.1816 secs, 3.8969 secs
-  resp read:    1.0866 secs, 0.0000 secs, 8.6276 secs
+    Details (average, fastest, slowest):
+    DNS+dialup:   0.0047 secs, 0.1829 secs, 0.8422 secs
+    DNS-lookup:   0.0009 secs, 0.0000 secs, 0.0404 secs
+    req write:    0.0000 secs, 0.0000 secs, 0.0003 secs
+    resp wait:    0.2012 secs, 0.1819 secs, 0.8142 secs
+    resp read:    0.0198 secs, 0.0000 secs, 0.1009 secs
 
-Status code distribution:
-  [200] 20000 responses
+    Status code distribution:
+    [200] 5000 responses
+
+    2개의 인스턴스 + 1개 인스턴스 중지 500명 동시접속
+
+
+    Summary:
+    Total:        16.5633 secs
+    Slowest:      1.9050 secs
+    Fastest:      0.1828 secs
+    Average:      0.7958 secs
+    Requests/sec: 603.7458
+
+    Total data:   42780000 bytes
+    Size/request: 4278 bytes
+
+    Response time histogram:
+    0.183 [1]     |
+    0.355 [127]   |■
+    0.527 [9]     |
+    0.699 [216]   |■
+    0.872 [9255]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    1.044 [163]   |■
+    1.216 [0]     |
+    1.388 [0]     |
+    1.561 [0]     |
+    1.733 [0]     |
+    1.905 [229]   |■
+
+
+    Latency distribution:
+    10% in 0.7289 secs
+    25% in 0.7427 secs
+    50% in 0.7844 secs
+    75% in 0.8048 secs
+    90% in 0.8397 secs
+    95% in 0.8542 secs
+    99% in 1.8472 secs
+
+    Details (average, fastest, slowest):
+    DNS+dialup:   0.0129 secs, 0.1828 secs, 1.9050 secs
+    DNS-lookup:   0.0013 secs, 0.0000 secs, 0.0385 secs
+    req write:    0.0000 secs, 0.0000 secs, 0.0003 secs
+    resp wait:    0.4879 secs, 0.1816 secs, 1.3073 secs
+    resp read:    0.2950 secs, 0.0000 secs, 0.6098 secs
+
+    Status code distribution:
+    [200] 10000 responses
+
+
+    2개의 인스턴스 + 1개 인스턴스 중지 1000명 동시접속
+
+    Summary:
+    Total:        43.3109 secs
+    Slowest:      9.6009 secs
+    Fastest:      0.1831 secs
+    Average:      2.0786 secs
+    Requests/sec: 461.7770
+
+    Total data:   85560000 bytes
+    Size/request: 4278 bytes
+
+    Response time histogram:
+    0.183 [1]     |
+    1.125 [1180]  |■■■
+    2.067 [15145] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    3.008 [1419]  |■■■■
+    3.950 [951]   |■■■
+    4.892 [113]   |
+    5.834 [297]   |■
+    6.776 [654]   |■■
+    7.717 [226]   |■
+    8.659 [2]     |
+    9.601 [12]    |
+
+
+    Latency distribution:
+    10% in 1.4529 secs
+    25% in 1.6401 secs
+    50% in 1.7626 secs
+    75% in 1.8967 secs
+    90% in 3.1588 secs
+    95% in 5.5531 secs
+    99% in 7.1259 secs
+
+    Details (average, fastest, slowest):
+    DNS+dialup:   0.0115 secs, 0.1831 secs, 9.6009 secs
+    DNS-lookup:   0.0019 secs, 0.0000 secs, 0.0581 secs
+    req write:    0.0000 secs, 0.0000 secs, 0.0009 secs
+    resp wait:    0.9611 secs, 0.1816 secs, 3.8969 secs
+    resp read:    1.0866 secs, 0.0000 secs, 8.6276 secs
+
+    Status code distribution:
+    [200] 20000 responses
 
