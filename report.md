@@ -76,6 +76,15 @@ n그록->aws으로 공유
     성공적으로 실행됨
     인스턴스 생성 sg생성 서브넷 생성
 
+    3#
+    ec2내부 ssh에서 
+    cloud-init status 명령어 실행
+    status: running [현재 설치중]
+    이후 
+    status:done [완료됨]
+
+    http://54.209.43.122:8000 사이트 주소로 iot_smart_gym 정상 작동확인
+
 
 
 
