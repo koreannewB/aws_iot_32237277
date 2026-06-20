@@ -14,8 +14,15 @@ iotsmartgym 기능
 
 변경점
 카메라로 사람인식->mp4영상으로 교체
+
+[오류]
+ec2에서 영상yolo모델 너무 큼
+->mp4만쓰고 yolo제거
+
 센서-> 코드상 변경
 n그록->aws으로 공유
+
+
 
 성능변화 테스트
 
@@ -25,8 +32,49 @@ n그록->aws으로 공유
 
 
 
+1-1 
+    1개의ec2로 웹 사이트 올리기
+    4번과제의 내용을 가져와서 사용
 
+    0#
+    aws sts get-caller-identity
 
+    권한이 있는지 확인
+    1#
+    terraform init
+    terraform validate
+    terraform plan
+
+    Terraform has been successfully initialized!
+
+    You may now begin working with Terraform. Try running "terraform plan" to see
+    any changes that are required for your infrastructure. All Terraform commands
+    should now work.
+
+    If you ever set or change modules or backend configuration for Terraform,
+    rerun this command to reinitialize your working directory. If you forget, other
+    commands will detect it and remind you to do so if necessary.
+
+    Success! The configuration is valid.
+
+    첫번째 명령어로 이번과제로 사용할 테라폼이 변경후 문맥상 막히는게 없는것을 확인
+    
+    2# 
+    terraform apply
+
+    Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+    Outputs:
+
+    instance_id = "i-0dd5f13e540c38eb7"
+    instance_public_dns = "ec2-54-175-59-103.compute-1.amazonaws.com"
+    instance_public_ip = "54.175.59.103"
+    security_group_id = "sg-0a7540954f8cb8349"
+    selected_subnet_id = "subnet-05f98bc64da45111d"
+
+    테라폼 plan으로 저장한 계획을 실행
+    성공적으로 실행됨
+    인스턴스 생성 sg생성 서브넷 생성
 
 
 

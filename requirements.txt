@@ -1,6 +1,3 @@
 fastapi
 uvicorn
-ultralytics
 opencv-python-headless
-albumentations
-moviepy
